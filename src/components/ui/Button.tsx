@@ -6,12 +6,12 @@ interface ButtonProps {
   isLoading?: boolean
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = ({
   title,
   onPress,
   isLoading,
   ...props
-}) => {
+}: ButtonProps) => {
   return (
     <TouchableOpacity
       onPress={onPress}

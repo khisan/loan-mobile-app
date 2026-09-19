@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
+import { LoginSchema, LoginSchemaType } from "@/utils/validators"
+import { zodResolver } from "@hookform/resolvers/zod"
 import React from "react"
+import { Controller, useForm } from "react-hook-form"
 import {
   KeyboardAvoidingView,
   Platform,
@@ -12,15 +15,25 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function LoginScreen() {
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
   const [loading, setLoading] = React.useState(false)
 
-  const handleLogin = () => {
+  const onSubmit = (data: LoginSchemaType) => {
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
     }, 1500)
+    console.log(data)
   }
 
   return (
@@ -50,21 +63,39 @@ export default function LoginScreen() {
 
             {/*Form*/}
             <View className="mb-8">
-              <Input
-                label="Email"
-                placeholder="nama@email.com"
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
+              <Controller
+                name="email"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Email"
+                    placeholder="nama@email.com"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                    value={field.value ?? ""}
+                    onChangeText={field.onChange}
+                    onBlur={field.onBlur}
+                    ref={field.ref}
+                    error={errors.email?.message}
+                  />
+                )}
               />
-              <Input
-                label="Kata Sandi"
-                placeholder="••••••••"
-                secureTextEntry
-                autoCapitalize="none"
-                value={password}
-                onChangeText={setPassword}
+              <Controller
+                name="password"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    label="Kata Sandi"
+                    placeholder="••••••••"
+                    secureTextEntry
+                    autoCapitalize="none"
+                    value={field.value ?? ""}
+                    onChangeText={field.onChange}
+                    onBlur={field.onBlur}
+                    ref={field.ref}
+                    error={errors.password?.message}
+                  />
+                )}
               />
               <TouchableOpacity className="align-self-end mb-6">
                 <Text className="text-sm font-semibold text-blue-600 text-right">
@@ -72,7 +103,11 @@ export default function LoginScreen() {
                 </Text>
               </TouchableOpacity>
 
-              <Button title="Masuk" onPress={handleLogin} isLoading={loading} />
+              <Button
+                title="Masuk"
+                onPress={handleSubmit(onSubmit)}
+                isLoading={loading}
+              />
 
               {/*Footer*/}
               <View className="flex-row justify-center mt-5">
@@ -90,15 +125,3 @@ export default function LoginScreen() {
     </SafeAreaView>
   )
 }
-
-// import { verifyInstallation } from "nativewind"
-// import { Text, View } from "react-native"
-
-// export default function LoginScreen() {
-//   verifyInstallation() // This will throw an error if Nativewind is not installed correctly
-//   return (
-//     <View className="flex-1 bg-red-600 justify-center items-center">
-//       <Text className="text-white text-2xl font-bold">TAILWIND AKTIF!</Text>
-//     </View>
-//   )
-// }
