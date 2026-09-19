@@ -1,5 +1,5 @@
 import axios from "axios"
-import * as SecureStore from "expo-secure-store"
+import * as secureStore from "../utils/secureStore"
 
 const apiClient = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
@@ -11,7 +11,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = SecureStore.getItemAsync("authToken")
+    const token = secureStore.tokenStorage.getAccessToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -28,7 +28,7 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      SecureStore.deleteItemAsync("authToken")
+      secureStore.tokenStorage.clearAuthSession()
       console.error("Unauthorized access. Token has been removed.")
     } else if (error.request) {
       console.error("No response received from the server.")
