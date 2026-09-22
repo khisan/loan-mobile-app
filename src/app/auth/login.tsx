@@ -48,19 +48,6 @@ export default function LoginScreen() {
         >
           <View className="flex-1 justify-center px-6 py-8">
             {/*Header/Branding*/}
-            <View className="mb-4">
-              <View className="mb-4">
-                <Text className="text-3xl font-bold text-gray-900 text-center">
-                  Selamat Datang 👋
-                </Text>
-              </View>
-              <View className="mb-3">
-                <Text className="text-base text-gray-500">
-                  Masuk ke akun Loan System untuk mengelola pinjaman Anda
-                </Text>
-              </View>
-            </View>
-
             {/*Form*/}
             <View className="mb-8">
               <Controller
@@ -113,7 +100,7 @@ export default function LoginScreen() {
               <View className="flex-row justify-center mt-5">
                 <Text className="text-gray-500 text-sm">Belum punya akun?</Text>
                 <TouchableOpacity>
-                  <Text className="text-sm font-bold text-blue-600">
+                  <Text className="text-sm font-bold text-blue-600 mx-1">
                     Daftar Sekarang
                   </Text>
                 </TouchableOpacity>
