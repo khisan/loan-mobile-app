@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/Button"
 import { Input } from "@/components/ui/Input"
+import { useAuth } from "@/hooks/useAuth"
 import { LoginSchema, LoginSchemaType } from "@/utils/validators"
 import { zodResolver } from "@hookform/resolvers/zod"
-import React from "react"
+import { useRouter } from "expo-router"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import {
   KeyboardAvoidingView,
@@ -15,6 +17,14 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function LoginScreen() {
+  const router = useRouter()
+
+  // 1. Panggil hook useAuth di dalam komponen
+  const { login, isLoading: IsGlobalLoading } = useAuth()
+
+  // State lokal untuk error handling/status loading tombol
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const {
     control,
     handleSubmit,
@@ -26,15 +36,27 @@ export default function LoginScreen() {
       password: "",
     },
   })
-  const [loading, setLoading] = React.useState(false)
 
-  const onSubmit = (data: LoginSchemaType) => {
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-    }, 1500)
-    console.log(data)
+  // 2. Fungsi onSubmit yang memanggil login() dari AuthContext
+  const onSubmit = async (data: LoginSchemaType) => {
+    setIsSubmitting(true)
+    try {
+      // Panggil fungsi login dari AuthContext dengan data form
+      await login(data)
+
+      // Jika berhasil, redirect ke dashboard
+      router.replace("/main/dashboard")
+    } catch (error: any) {
+      // Tangkap error dari backend SpringBoot
+      const errorMessage =
+        error?.response?.data?.message ||
+        "Gagal masuk. Periksa email dan password Anda."
+    } finally {
+      setIsSubmitting(false)
+    }
   }
+
+  const isLoading = isSubmitting || IsGlobalLoading
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -93,7 +115,7 @@ export default function LoginScreen() {
               <Button
                 title="Masuk"
                 onPress={handleSubmit(onSubmit)}
-                isLoading={loading}
+                isLoading={isLoading}
               />
 
               {/*Footer*/}
