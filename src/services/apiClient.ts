@@ -1,9 +1,10 @@
+import { ENV } from "@/config/env"
 import axios from "axios"
 import * as secureStore from "../utils/secureStore"
 
 const apiClient = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_API_URL,
-  timeout: 10000,
+  baseURL: ENV.API_URL,
+  timeout: ENV.TIMEOUT,
   headers: {
     "Content-Type": "application/json",
   },
@@ -31,6 +32,7 @@ apiClient.interceptors.response.use(
       secureStore.tokenStorage.clearAuthSession()
       console.error("Unauthorized access. Token has been removed.")
     } else if (error.request) {
+      console.error("error: ", error)
       console.error("No response received from the server.")
     } else {
       console.error("Error in setting up the request:", error.message)

@@ -22,11 +22,7 @@ export interface UserProfile {
   createdAt: string
 }
 
-export interface AuthResponse {
-  accessToken: string
-  refreshToken: string
-  user: UserProfile
-}
+export type AuthToken = string
 
 export interface ApiResponse<T> {
   data: T

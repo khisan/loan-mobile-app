@@ -25,10 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const response = await authServices.login(credential)
 
       // 2. Simpan token ke SecureStore
-      await tokenStorage.saveAccessToken(response.accessToken)
-
-      // 3. Set state user global
-      setUser(response.user)
+      await tokenStorage.saveAccessToken(response)
     } catch (error) {
       console.error("Login Error: ", error)
       throw error // Throw balik agar error nya bisa di cath oleh UI login (form)
