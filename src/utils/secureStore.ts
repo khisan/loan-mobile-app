@@ -1,3 +1,4 @@
+import { UserProfile } from "@/services/auth/authTypes"
 import * as SecureStore from "expo-secure-store"
 
 const KEYS = {
@@ -37,11 +38,45 @@ export const deleteItem = async (key: keyof typeof KEYS): Promise<void> => {
 }
 
 export const tokenStorage = {
-  saveAccessToken: async (token: string) => {
-    await setItem("ACCESS_TOKEN", token)
+  saveAccessToken: async (token: string): Promise<void> => {
+    try {
+      await setItem("ACCESS_TOKEN", token)
+    } catch (error) {
+      console.error("Error saving token to storage: ", error)
+      throw error
+    }
   },
-  getAccessToken: async () => {
-    return await getItem("ACCESS_TOKEN")
+  getAccessToken: async (): Promise<string | null> => {
+    try {
+      const token = await getItem("ACCESS_TOKEN")
+      if (!token || token?.trim() === "") {
+        return null
+      }
+      return token
+    } catch (error) {
+      console.error("Error reading access token from storage: ", error)
+      throw error
+    }
+  },
+  saveUserData: async (userData: UserProfile): Promise<void> => {
+    try {
+      const stringifiedUserData = JSON.stringify(userData)
+      await setItem("USER_DATA", stringifiedUserData)
+    } catch (error) {
+      console.error("Error saving user data to storage: ", error)
+      throw error
+    }
+  },
+  getUserData: async () => {
+    try {
+      const rawData = await getItem("USER_DATA")
+      if (!rawData) return null
+      const userData: UserProfile = JSON.parse(rawData)
+      return userData
+    } catch (error) {
+      console.error("Error reading user data from storage: ", error)
+      throw error
+    }
   },
   clearAuthSession: async () => {
     await deleteItem("ACCESS_TOKEN")

@@ -1,5 +1,10 @@
 import apiClient from "../apiClient"
-import { ApiResponse, LoginRequest, RegisterRequest } from "./authTypes"
+import {
+  ApiResponse,
+  LoginRequest,
+  RegisterRequest,
+  UserProfile,
+} from "./authTypes"
 
 const AUTH_ENDPOINTS = {
   LOGIN: "/auth/login",
@@ -18,8 +23,6 @@ export const authServices = {
     // Ambil string JWT dari response.data, atau gunakan response itu sendiri jika Axios di RN mereturn string murni
     const rawData = response.data ?? response
     const token = typeof rawData === "string" ? rawData : String(rawData)
-    console.log("response utuh auth services: ", response)
-    console.log("token: ", token)
     return token
   },
 
@@ -43,8 +46,11 @@ export const authServices = {
     await apiClient.post(AUTH_ENDPOINTS.LOGOUT)
   },
 
-  getcurrentUser: async (): Promise<string> => {
-    const response = await apiClient.get<ApiResponse<string>>("/auth/me")
+  getUser: async (email: string): Promise<UserProfile> => {
+    const safeEmail = encodeURIComponent(email)
+    const response = await apiClient.get<ApiResponse<UserProfile>>(
+      `/api/users/${safeEmail}`,
+    )
     return response.data.data
   },
 }

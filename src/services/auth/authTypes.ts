@@ -14,12 +14,9 @@ export interface RefreshTokenRequest {
 }
 
 export interface UserProfile {
-  id: string
+  name: string
   email: string
-  fullName: string
   role: "user" | "admin"
-  avatarUrl?: string
-  createdAt: string
 }
 
 export type AuthToken = string

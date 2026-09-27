@@ -1,10 +1,10 @@
 import { authServices } from "@/services/auth/authServices"
 import { tokenStorage } from "@/utils/secureStore"
 import { createContext, useState } from "react"
-import { AuthResponse, LoginRequest } from "../services/auth/authTypes"
+import { LoginRequest, UserProfile } from "../services/auth/authTypes"
 
 interface AuthContextType {
-  user: AuthResponse["user"] | null
+  user: UserProfile | null
   isLoading: boolean
   isAuthenticated: boolean
   login: (credentials: LoginRequest) => Promise<void>
@@ -14,7 +14,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<AuthResponse["user"] | null>(null)
+  const [user, setUser] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // Fungsi Login
@@ -38,12 +38,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const logout = async () => {
     setIsLoading(true)
     try {
-      await authServices.logout
+      await authServices.logout()
     } catch (e) {
       // Abaikan jika error server gagal
     } finally {
       await tokenStorage.clearAuthSession()
       setUser(null)
+      setIsLoading(false)
+    }
+  }
+
+  const getUser = async (email: string) => {
+    setIsLoading(true)
+    try {
+      const user = await authServices.getUser(email)
+      await tokenStorage.
+    } catch (e) {
+      console.error(e)
+    } finally {
       setIsLoading(false)
     }
   }
