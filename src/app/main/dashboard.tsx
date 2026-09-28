@@ -12,6 +12,7 @@ import { useAuth } from "../../hooks/useAuth"
 export default function Dashboard() {
   const router = useRouter()
   const { user, logout } = useAuth()
+  console.log("user: ", user)
 
   const handleLogout = async () => {
     Alert.alert("Konfirmasi Logout", "Apakah Anda yakin ingin keluar?", [
@@ -39,7 +40,7 @@ export default function Dashboard() {
               Dashboard
             </Text>
             <Text className="text-white text-2xl font-bold mt-1">
-              {user?.fullName || "Guest"}
+              {user?.name || "Guest"}
             </Text>
             <Text className="text-emerald-400 text-xs font-semibold mt-0.5">
               Role: {user?.role || "User"}
@@ -57,7 +58,7 @@ export default function Dashboard() {
             className="w-11 h-11 bg-slate-700 border border-slate-600 rounded-full justify-center items-center"
           >
             <Text className="text-white font-bold text-base">
-              {user?.fullName ? user.fullName.charAt(0).toUpperCase() : "U"}
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </Text>
           </TouchableOpacity>
         </View>
@@ -104,7 +105,7 @@ export default function Dashboard() {
         <View className="flex-row gap-3 mb-6">
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => router.push("/main/loan-request")}
+            // onPress={() => router.push("/main/loan-request")}
             className="flex-1 bg-blue-600 p-4 rounded-xl justify-between"
           >
             <View className="w-8 h-8 bg-blue-500 rounded-lg justify-center items-center mb-3">

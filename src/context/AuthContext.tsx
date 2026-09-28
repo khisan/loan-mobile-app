@@ -9,6 +9,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   login: (credentials: LoginRequest) => Promise<void>
   logout: () => Promise<void>
+  getUser: (email: string) => Promise<void>
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -52,7 +53,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true)
     try {
       const user = await authServices.getUser(email)
-      await tokenStorage.
+      await tokenStorage.saveUserData(user)
+      setUser(user)
+      console.log("set user: ", user)
     } catch (e) {
       console.error(e)
     } finally {
@@ -62,7 +65,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, isAuthenticated: !!user, login, logout }}
+      value={{
+        user,
+        isLoading,
+        isAuthenticated: !!user,
+        login,
+        logout,
+        getUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

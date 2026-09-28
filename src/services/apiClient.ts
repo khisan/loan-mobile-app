@@ -37,6 +37,7 @@ apiClient.interceptors.response.use(
     } else {
       console.error("Error in setting up the request:", error.message)
     }
+    console.log("BASE_URL dipanggil:", apiClient.defaults.baseURL)
     return Promise.reject(error)
   },
 )

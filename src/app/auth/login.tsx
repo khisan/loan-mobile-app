@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { LoginSchema, LoginSchemaType } from "@/utils/validators"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "expo-router"
+import { Eye, EyeOff } from "lucide-react-native"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import {
@@ -18,12 +19,12 @@ import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function LoginScreen() {
   const router = useRouter()
-
   // 1. Panggil hook useAuth di dalam komponen
-  const { login, isLoading: IsGlobalLoading } = useAuth()
+  const { login, isLoading: IsGlobalLoading, getUser } = useAuth()
 
   // State lokal untuk error handling/status loading tombol
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const {
     control,
@@ -45,6 +46,7 @@ export default function LoginScreen() {
       await login(data)
 
       // Jika berhasil, redirect ke dashboard
+      await getUser(data.email)
       router.replace("/main/dashboard")
     } catch (error: any) {
       // Tangkap error dari backend SpringBoot
@@ -93,17 +95,31 @@ export default function LoginScreen() {
                 name="password"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    label="Kata Sandi"
-                    placeholder="••••••••"
-                    secureTextEntry
-                    autoCapitalize="none"
-                    value={field.value ?? ""}
-                    onChangeText={field.onChange}
-                    onBlur={field.onBlur}
-                    ref={field.ref}
-                    error={errors.password?.message}
-                  />
+                  <View className="relative w-full">
+                    <Input
+                      label="Kata Sandi"
+                      placeholder="••••••••"
+                      secureTextEntry={!showPassword}
+                      autoCapitalize="none"
+                      value={field.value ?? ""}
+                      onChangeText={field.onChange}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
+                      error={errors.password?.message}
+                    />
+                    {/* Tombol ikon toggle show/hide password */}
+                    <TouchableOpacity
+                      onPress={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 top-[25px] p-2"
+                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={20} color="#6B7280" />
+                      ) : (
+                        <Eye size={20} color="#6B7280" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
                 )}
               />
               <TouchableOpacity className="align-self-end mb-6">
