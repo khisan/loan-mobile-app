@@ -125,7 +125,6 @@ export default function Dashboard() {
             activeOpacity={0.8}
             className="flex-1 bg-slate-800 p-4 rounded-xl"
           >
-            {" "}
             <View className="w-8 h-8 bg-slate-800 p-4 rounded-xl justify-between border border-slate-700">
               <Text className="text-slate-300 font-bold text-base">📄</Text>
             </View>

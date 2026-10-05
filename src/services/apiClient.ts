@@ -11,11 +11,13 @@ const apiClient = axios.create({
 })
 
 apiClient.interceptors.request.use(
-  (config) => {
-    const token = secureStore.tokenStorage.getAccessToken()
+  async (config) => {
+    const token = await secureStore.tokenStorage.getAccessToken()
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+      const cleanToken = token.replace(/^"(.*)"$/, "$1").trim() // Bersihkan tanda kutip ganda ("") dan newline/spasi jika ada
+      config.headers.Authorization = `Bearer ${cleanToken}`
     }
+    config.headers.set("Content-Type", "application/json")
     return config
   },
   (error) => {
@@ -25,7 +27,7 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => {
-    return response.data
+    return response
   },
   (error) => {
     if (error.response && error.response.status === 401) {

@@ -19,8 +19,6 @@ export interface UserProfile {
   role: "user" | "admin"
 }
 
-export type AuthToken = string
-
 export interface ApiResponse<T> {
   data: T
   message: string

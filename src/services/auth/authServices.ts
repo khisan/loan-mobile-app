@@ -15,15 +15,11 @@ const AUTH_ENDPOINTS = {
 
 export const authServices = {
   login: async (credentials: LoginRequest): Promise<string> => {
-    const response = await apiClient.post<string>(
+    const response = await apiClient.post<ApiResponse<string>>(
       AUTH_ENDPOINTS.LOGIN,
       credentials,
-      { responseType: "text" },
     )
-    // Ambil string JWT dari response.data, atau gunakan response itu sendiri jika Axios di RN mereturn string murni
-    const rawData = response.data ?? response
-    const token = typeof rawData === "string" ? rawData : String(rawData)
-    return token
+    return response.data.data
   },
 
   register: async (userData: RegisterRequest): Promise<string> => {
@@ -49,8 +45,9 @@ export const authServices = {
   getUser: async (email: string): Promise<UserProfile> => {
     const safeEmail = encodeURIComponent(email)
     const response = await apiClient.get<ApiResponse<UserProfile>>(
-      `/api/users/${safeEmail}`,
+      `/users/${safeEmail}`,
     )
+    console.log("response get user: ", response.data.data)
     return response.data.data
   },
 }

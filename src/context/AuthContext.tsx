@@ -22,11 +22,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (credential: LoginRequest) => {
     setIsLoading(true)
     try {
-      // 1. Panggil API Spring Boot lewat authservice
-      const response = await authServices.login(credential)
-
+      // 1. Dapatkan token JWT murni dari backend
+      const token = await authServices.login(credential)
       // 2. Simpan token ke SecureStore
-      await tokenStorage.saveAccessToken(response)
+      console.log("token: ", token)
+      await tokenStorage.saveAccessToken(token)
     } catch (error) {
       console.error("Login Error: ", error)
       throw error // Throw balik agar error nya bisa di cath oleh UI login (form)
