@@ -1,10 +1,7 @@
+import { ApiResponse } from "@/app/types/api/api"
+import { UserProfile } from "@/app/types/profile/profileTypes"
+import { LoginRequest, RegisterRequest } from "../../app/types/auth/authTypes"
 import apiClient from "../apiClient"
-import {
-  ApiResponse,
-  LoginRequest,
-  RegisterRequest,
-  UserProfile,
-} from "./authTypes"
 
 const AUTH_ENDPOINTS = {
   LOGIN: "/auth/login",

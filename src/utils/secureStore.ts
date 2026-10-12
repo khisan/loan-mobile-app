@@ -1,4 +1,4 @@
-import { UserProfile } from "@/services/auth/authTypes"
+import { UserProfile } from "@/app/types/auth/authTypes"
 import * as SecureStore from "expo-secure-store"
 
 const KEYS = {

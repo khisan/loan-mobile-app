@@ -1,7 +1,8 @@
+import { UserProfile } from "@/app/types/profile/profileTypes"
 import { authServices } from "@/services/auth/authServices"
 import { tokenStorage } from "@/utils/secureStore"
 import { createContext, useState } from "react"
-import { LoginRequest, UserProfile } from "../services/auth/authTypes"
+import { LoginRequest } from "../app/types/auth/authTypes"
 
 interface AuthContextType {
   user: UserProfile | null
